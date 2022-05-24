@@ -19,7 +19,17 @@ const run = async () => {
         await client.connect()
         console.log('DB Connected');
         const toolsCollection = client.db("HMBR_TOOLS").collection("tools");
-        
+        const reviewsCollection = client.db("HMBR_TOOLS").collection("reviews");
+
+        app.get('/tools', async(req, res)=>{
+            const tools= await toolsCollection.find().toArray();
+            res.send(tools);
+        })
+        app.get('/reviews', async(req, res)=>{
+            const tools= await reviewsCollection.find().sort({$natural:-1}).toArray();
+            res.send(tools);
+        })
+
 
 
     } finally {
