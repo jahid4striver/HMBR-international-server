@@ -37,10 +37,23 @@ const run = async () => {
             const result= await toolsCollection.findOne(query);
             res.send(result);
         });
+        app.get('/orders/:id', async(req, res)=>{
+            const id= req.params.id;
+            const query={_id: ObjectId(id)};
+            const result= await ordersCollection.findOne(query);
+            res.send(result);
+        });
 
         app.post('/orders', async(req, res)=>{
             const orders= req.body;
             const result= await ordersCollection.insertOne(orders);
+            res.send(result);
+        });
+
+        app.get('/orders', async(req, res)=>{
+            const email= req.query.email;
+            const filter= {email: email};
+            const result= await ordersCollection.find(filter).toArray();
             res.send(result);
         })
 
