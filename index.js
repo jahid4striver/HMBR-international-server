@@ -3,7 +3,7 @@ const cors = require('cors');
 const app = express();
 require('dotenv').config();
 const port = process.env.PORT || 5000;
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 
 app.use(cors());
@@ -20,6 +20,7 @@ const run = async () => {
         console.log('DB Connected');
         const toolsCollection = client.db("HMBR_TOOLS").collection("tools");
         const reviewsCollection = client.db("HMBR_TOOLS").collection("reviews");
+        const ordersCollection = client.db("HMBR_TOOLS").collection("orders");
 
         app.get('/tools', async(req, res)=>{
             const tools= await toolsCollection.find().toArray();
@@ -28,6 +29,19 @@ const run = async () => {
         app.get('/reviews', async(req, res)=>{
             const tools= await reviewsCollection.find().sort({$natural:-1}).toArray();
             res.send(tools);
+        })
+
+        app.get('/tools/:id', async(req, res)=>{
+            const id= req.params.id;
+            const query={_id: ObjectId(id)};
+            const result= await toolsCollection.findOne(query);
+            res.send(result);
+        });
+
+        app.post('/orders', async(req, res)=>{
+            const orders= req.body;
+            const result= await ordersCollection.insertOne(orders);
+            res.send(result);
         })
 
 
