@@ -22,6 +22,7 @@ const run = async () => {
         const toolsCollection = client.db("HMBR_TOOLS").collection("tools");
         const reviewsCollection = client.db("HMBR_TOOLS").collection("reviews");
         const ordersCollection = client.db("HMBR_TOOLS").collection("orders");
+        const usersCollection = client.db("HMBR_TOOLS").collection("users");
 
         app.get('/tools', async(req, res)=>{
             const tools= await toolsCollection.find().toArray();
@@ -93,6 +94,12 @@ const run = async () => {
         app.post('/reviews', async(req,res)=>{ 
             const review= req.body;
             const result= await reviewsCollection.insertOne(review);
+            res.send(result);
+        });
+
+        app.post('/users', async(req, res)=>{
+            const user= req.body;
+            const result= await usersCollection.insertOne(user);
             res.send(result);
         })
 
