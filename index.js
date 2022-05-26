@@ -4,7 +4,7 @@ const app = express();
 require('dotenv').config();
 const port = process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
+const stripe = require('stripe')(process.env.REACT_APP_STRIPE_SECRET_KEY)
 
 
 app.use(cors());
@@ -44,7 +44,7 @@ const run = async () => {
             const result= await ordersCollection.findOne(query);
             res.send(result);
         });
-        
+
         app.patch('/orders/:id', async(req, res)=>{
             const id= req.params.id;
             const payment= req.body;
@@ -58,6 +58,13 @@ const run = async () => {
             const result= await ordersCollection.updateOne(filter,updateDoc);
             res.send(result);
         });
+
+        app.delete('orders/:id', async(req, res)=>{
+            const id= req.params.id;
+            const filter= {_id: ObjectId(id)};
+            const result= await ordersCollection.deleteOne(filter);
+            res.send(result);
+        } )
 
         app.post('/orders', async(req, res)=>{
             const orders= req.body;
