@@ -59,7 +59,7 @@ const run = async () => {
             res.send(result);
         });
 
-        app.delete('orders/:id', async(req, res)=>{
+        app.delete('/orders/:id', async(req, res)=>{
             const id= req.params.id;
             const filter= {_id: ObjectId(id)};
             const result= await ordersCollection.deleteOne(filter);
@@ -88,6 +88,12 @@ const run = async () => {
                 payment_method_types: ['card']
             });
             res.send({clientSecret: paymentIntent.client_secret})
+        });
+
+        app.post('/reviews', async(req,res)=>{ 
+            const review= req.body;
+            const result= await reviewsCollection.insertOne(review);
+            res.send(result);
         })
 
         
