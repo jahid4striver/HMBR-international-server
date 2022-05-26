@@ -29,8 +29,8 @@ const run = async () => {
             res.send(tools);
         })
         app.get('/reviews', async(req, res)=>{
-            const tools= await reviewsCollection.find().sort({$natural:-1}).toArray();
-            res.send(tools);
+            const reviews= await reviewsCollection.find().sort({$natural:-1}).toArray();
+            res.send(reviews);
         })
 
         app.get('/tools/:id', async(req, res)=>{
@@ -100,6 +100,32 @@ const run = async () => {
         app.post('/users', async(req, res)=>{
             const user= req.body;
             const result= await usersCollection.insertOne(user);
+            res.send(result);
+        })
+
+        app.put('/users/:email', async(req, res)=>{
+            const user= req.body;
+            const email= req.params.email;
+            const filter= {email: email};
+            const options = { upsert: true };
+            const updateDoc={
+                $set:user,
+            }
+            const result= await usersCollection.updateOne(filter,updateDoc,options);
+            res.send(result);
+        });
+
+        // app.get('/users', async(req, res)=>{
+        //     // const email= req.params.email;
+        //     // const filter= {email: email};
+        //     const result= await usersCollection.find().toArray();
+        //     res.send(result);
+        // })
+
+        app.get('/users/', async(req, res)=>{
+            const email= req.query.email;
+            const filter= {email: email};
+            const result= await usersCollection.findOne(filter);
             res.send(result);
         })
 
