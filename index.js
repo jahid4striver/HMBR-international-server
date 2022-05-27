@@ -25,8 +25,13 @@ const run = async () => {
         const usersCollection = client.db("HMBR_TOOLS").collection("users");
 
         app.get('/tools', async(req, res)=>{
-            const tools= await toolsCollection.find().toArray();
+            const tools= await toolsCollection.find().sort({$natural:-1}).toArray();
             res.send(tools);
+        })
+        app.post('/tools', async(req, res)=>{
+            const tool= req.body
+            const result= await toolsCollection.insertOne(tool);
+            res.send(result);
         })
         app.get('/reviews', async(req, res)=>{
             const reviews= await reviewsCollection.find().sort({$natural:-1}).toArray();
@@ -115,12 +120,6 @@ const run = async () => {
             res.send(result);
         });
 
-        // app.get('/users', async(req, res)=>{
-        //     // const email= req.params.email;
-        //     // const filter= {email: email};
-        //     const result= await usersCollection.find().toArray();
-        //     res.send(result);
-        // })
 
         app.get('/users/', async(req, res)=>{
             const email= req.query.email;
