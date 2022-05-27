@@ -44,6 +44,27 @@ const run = async () => {
             const result= await toolsCollection.findOne(query);
             res.send(result);
         });
+
+        app.delete('/tools/:id', async(req, res)=>{
+            const id= req.params.id;
+            const query= {_id: ObjectId(id)};
+            const result= await toolsCollection.deleteOne(query);
+            res.send(result);
+        } )
+
+        // app.put('/tools/:id', async(req, res)=>{
+        //     const id= req.params.id;
+        //     const tool= req.body;
+        //     const filter={_id: ObjectId(id)};
+        //     const options= {upsert: true}
+        //     const updateDoc={
+        //         $set: tool,
+        //     }
+        //     const result= await toolsCollection.updateOne(filter,updateDoc, options);
+        //     res.send(result);
+        // });
+
+
         app.get('/orders/:id', async(req, res)=>{
             const id= req.params.id;
             const query={_id: ObjectId(id)};
