@@ -11,20 +11,20 @@ const stripe = require('stripe')(process.env.REACT_APP_STRIPE_SECRET_KEY)
 app.use(cors());
 app.use(express.json());
 
-const verifyJWT = (req, res, next) => {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-        return res.status(401).send({ message: 'UnAuthorized Access' })
-    }
-    const token = authHeader.split(' ')[1]
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, function (err, decoded) {
-        if (err) {
-            res.status(403).send({ message: 'Forbidden Access'})
-        }
-        req.decoded = decoded
-        next();
-    });
-}
+// const verifyJWT = (req, res, next) => {
+//     const authHeader = req.headers.authorization;
+//     if (!authHeader) {
+//         return res.status(401).send({ message: 'UnAuthorized Access' })
+//     }
+//     const token = authHeader.split(' ')[1]
+//     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, function (err, decoded) {
+//         if (err) {
+//             res.status(403).send({ message: 'Forbidden Access'})
+//         }
+//         req.decoded = decoded;
+//         next();
+//     });
+// }
 
 
 
@@ -40,7 +40,7 @@ const run = async () => {
         const ordersCollection = client.db("HMBR_TOOLS").collection("orders");
         const usersCollection = client.db("HMBR_TOOLS").collection("users");
 
-        app.get('/tools', verifyJWT, async (req, res) => {
+        app.get('/tools', async (req, res) => {
             const tools = await toolsCollection.find().sort({ $natural: -1 }).toArray();
             res.send(tools);
         })
@@ -185,8 +185,8 @@ const run = async () => {
                 $set: user,
             }
             const result = await usersCollection.updateOne(filter, updateDoc, options);
-            const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' })
-            res.send({ result, token });
+            // const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' })
+            res.send(result);
         });
 
 
