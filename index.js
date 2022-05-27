@@ -52,6 +52,19 @@ const run = async () => {
             res.send(result);
         } )
 
+        // app.put('/toolsqytupdate/:id', async(req, res)=>{
+        //     const id= req.params.id;
+        //     const tool= req.body;
+        //     const filter={_id: ObjectId(id)};
+        //     const options= {upsert: true}
+        //     const updateDoc={
+        //         $set: tool,
+        //     }
+        //     const result= await toolsCollection.updateOne(filter,updateDoc, options);
+        //     res.send(result);
+        // });
+
+
         // app.put('/tools/:id', async(req, res)=>{
         //     const id= req.params.id;
         //     const tool= req.body;
@@ -79,10 +92,23 @@ const run = async () => {
             const updateDoc={
                 $set:{
                     paid:true,
-                    paymentId: payment.paymentId
+                    paymentId: payment.paymentId,
+                    status:'Pending'
                 }
             }
             const result= await ordersCollection.updateOne(filter,updateDoc);
+            res.send(result);
+        });
+
+        app.put('/manageorders/:id', async(req, res)=>{
+            const id= req.params.id;
+            const payment= req.body;
+            const filter={_id: ObjectId(id)};
+            const options= {upsert: true}
+            const updateDoc={
+                $set: payment,
+            }
+            const result= await ordersCollection.updateOne(filter,updateDoc, options);
             res.send(result);
         });
 
@@ -103,6 +129,11 @@ const run = async () => {
             const email= req.query.email;
             const filter= {email: email};
             const result= await ordersCollection.find(filter).toArray();
+            res.send(result);
+        });
+
+        app.get('/allorders', async(req, res)=>{
+            const result= await ordersCollection.find().toArray();
             res.send(result);
         });
 
@@ -148,6 +179,17 @@ const run = async () => {
             const result= await usersCollection.findOne(filter);
             res.send(result);
         })
+        app.get('/allusers', async(req, res)=>{
+            const result= await usersCollection.find().toArray();
+            res.send(result);
+        })
+
+        app.delete('/users/:id', async(req, res)=>{
+            const id= req.params.id;
+            const filter= {_id: ObjectId(id)};
+            const result= await usersCollection.deleteOne(filter);
+            res.send(result);
+        } )
 
         
 
