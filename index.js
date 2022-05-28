@@ -40,19 +40,29 @@ const run = async () => {
         const ordersCollection = client.db("HMBR_TOOLS").collection("orders");
         const usersCollection = client.db("HMBR_TOOLS").collection("users");
 
-        app.get('/tools', verifyJWT, async (req, res) => {
+// API For GET all tools from database
+
+        app.get('/tools', async (req, res) => {
             const tools = await toolsCollection.find().sort({ $natural: -1 }).toArray();
             res.send(tools);
-        })
+        });
+
+// API For Post tools/add product to database
+
         app.post('/tools', async (req, res) => {
             const tool = req.body
             const result = await toolsCollection.insertOne(tool);
             res.send(result);
         })
+
+// API For GET all reviews and show in homepage from database
+     
         app.get('/reviews', async (req, res) => {
             const reviews = await reviewsCollection.find().sort({ $natural: -1 }).toArray();
             res.send(reviews);
         })
+
+// API For GET  tools by Id from database
 
         app.get('/tools/:id', async (req, res) => {
             const id = req.params.id;
@@ -61,12 +71,16 @@ const run = async () => {
             res.send(result);
         });
 
+// API For Delete tools by Id  from database
+
         app.delete('/tools/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const result = await toolsCollection.deleteOne(query);
             res.send(result);
         })
+
+// API For Update Product with a Moda  from database (not in use)
 
         // app.put('/toolsqytupdate/:id', async(req, res)=>{
         //     const id= req.params.id;
@@ -93,6 +107,7 @@ const run = async () => {
         //     res.send(result);
         // });
 
+// API For GET Orders by Id  from database
 
         app.get('/orders/:id', async (req, res) => {
             const id = req.params.id;
@@ -100,6 +115,8 @@ const run = async () => {
             const result = await ordersCollection.findOne(query);
             res.send(result);
         });
+
+// API For Update Orders by Id for giving status after payment  to database
 
         app.patch('/orders/:id', async (req, res) => {
             const id = req.params.id;
@@ -116,6 +133,8 @@ const run = async () => {
             res.send(result);
         });
 
+// API For Update Orders Status by Id to database
+
         app.put('/manageorders/:id', async (req, res) => {
             const id = req.params.id;
             const payment = req.body;
@@ -128,6 +147,8 @@ const run = async () => {
             res.send(result);
         });
 
+// API For Delete Orders by Id  from database
+
         app.delete('/orders/:id', async (req, res) => {
             const id = req.params.id;
             const filter = { _id: ObjectId(id) };
@@ -135,11 +156,17 @@ const run = async () => {
             res.send(result);
         })
 
+
+// API For Post a Orders to database
+
+
         app.post('/orders', async (req, res) => {
             const orders = req.body;
             const result = await ordersCollection.insertOne(orders);
             res.send(result);
         });
+
+// API For GET All Orders by email query from database
 
         app.get('/orders', async (req, res) => {
             const email = req.query.email;
@@ -148,10 +175,14 @@ const run = async () => {
             res.send(result);
         });
 
+// API For GET All Orders from database
+
         app.get('/allorders', async (req, res) => {
             const result = await ordersCollection.find().toArray();
             res.send(result);
         });
+
+// API For Payment 
 
         app.post('/create-payment-intent', async (req, res) => {
             const purchaseOrder = req.body;
@@ -164,17 +195,23 @@ const run = async () => {
             res.send({ clientSecret: paymentIntent.client_secret })
         });
 
+// API for post a reveiws from user to database
+
         app.post('/reviews', async (req, res) => {
             const review = req.body;
             const result = await reviewsCollection.insertOne(review);
             res.send(result);
         });
 
+// API For Post a user to database
+
         app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await usersCollection.insertOne(user);
             res.send(result);
         })
+
+// API For Update a User by geting with email id as params
 
         app.put('/users/:email', async (req, res) => {
             const user = req.body;
@@ -190,17 +227,23 @@ const run = async () => {
             res.send({result,token});
         });
 
+// API For get a users from database by email query
 
-        app.get('/users/', async (req, res) => {
+        app.get('/users', async (req, res) => {
             const email = req.query.email;
             const filter = { email: email };
             const result = await usersCollection.findOne(filter);
             res.send(result);
         })
+
+// API For Get all users from database
+
         app.get('/allusers', async (req, res) => {
             const result = await usersCollection.find().toArray();
             res.send(result);
         })
+
+// API For Delete a user by id from database
 
         app.delete('/users/:id', async (req, res) => {
             const id = req.params.id;
