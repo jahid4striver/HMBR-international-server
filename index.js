@@ -266,7 +266,7 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-    res.send('Makute International Server Is Running')
+    res.send('HMBR International Server Is Running')
 })
 
 app.listen(port, () => {
